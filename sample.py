@@ -39,32 +39,36 @@ def parse_args():
                         default=64,
                         dest='batch_size',
                         help='Batch size (default: 64).')
-    
+
     parser.add_argument('--seq-length', '-l',
                         type=int,
                         default=10,
                         dest='seq_length',
                         help='The maximum password length. Use the same value that you did for training. (default: 10)')
-    
+
     parser.add_argument('--layer-dim', '-d',
                         type=int,
                         default=128,
                         dest='layer_dim',
                         help='The hidden layer dimensionality for the generator. Use the same value that you did for training (default: 128)')
-    
+
     args = parser.parse_args()
 
     if not os.path.isdir(args.input_dir):
-        parser.error('"{}" folder doesn\'t exist'.format(args.input_dir))
+        parser.error(f""""{args.input_dir}" folder doesn\'t exist""")
 
-    if not os.path.exists(args.checkpoint + '.meta'):
-        parser.error('"{}.meta" file doesn\'t exist'.format(args.checkpoint))
+    if not os.path.exists(f'{args.checkpoint}.meta'):
+        parser.error(f""""{args.checkpoint}.meta" file doesn\'t exist""")
 
     if not os.path.exists(os.path.join(args.input_dir, 'charmap.pickle')):
-        parser.error('charmap.pickle doesn\'t exist in {}, are you sure that directory is a trained model directory'.format(args.input_dir))
+        parser.error(
+            f"charmap.pickle doesn\'t exist in {args.input_dir}, are you sure that directory is a trained model directory"
+        )
 
     if not os.path.exists(os.path.join(args.input_dir, 'inv_charmap.pickle')):
-        parser.error('inv_charmap.pickle doesn\'t exist in {}, are you sure that directory is a trained model directory'.format(args.input_dir))
+        parser.error(
+            f"inv_charmap.pickle doesn\'t exist in {args.input_dir}, are you sure that directory is a trained model directory"
+        )
 
     return args
 
@@ -85,9 +89,7 @@ with tf.Session() as session:
         samples = np.argmax(samples, axis=2)
         decoded_samples = []
         for i in xrange(len(samples)):
-            decoded = []
-            for j in xrange(len(samples[i])):
-                decoded.append(inv_charmap[samples[i][j]])
+            decoded = [inv_charmap[samples[i][j]] for j in xrange(len(samples[i]))]
             decoded_samples.append(tuple(decoded))
         return decoded_samples
 

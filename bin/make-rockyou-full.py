@@ -6,7 +6,7 @@ with open('../data/rockyou-withcount.txt', 'r') as f:
         line = line.strip() # remove leading spaces
         try:
             count, password = line.split(' ', 1)
-            for i in range(int(count)):
+            for _ in range(int(count)):
                 # print the password to stdout once for each time it showed up in
                 # the original leak
                 print(password)

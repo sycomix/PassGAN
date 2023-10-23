@@ -153,9 +153,7 @@ with tf.Session() as session:
         samples = np.argmax(samples, axis=2)
         decoded_samples = []
         for i in xrange(len(samples)):
-            decoded = []
-            for j in xrange(len(samples[i])):
-                decoded.append(inv_charmap[samples[i][j]])
+            decoded = [inv_charmap[samples[i][j]] for j in xrange(len(samples[i]))]
             decoded_samples.append(tuple(decoded))
         return decoded_samples
 

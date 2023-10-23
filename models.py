@@ -6,9 +6,9 @@ import tflib.ops.conv1d
 def ResBlock(name, inputs, dim):
     output = inputs
     output = tf.nn.relu(output)
-    output = lib.ops.conv1d.Conv1D(name+'.1', dim, dim, 5, output)
+    output = lib.ops.conv1d.Conv1D(f'{name}.1', dim, dim, 5, output)
     output = tf.nn.relu(output)
-    output = lib.ops.conv1d.Conv1D(name+'.2', dim, dim, 5, output)
+    output = lib.ops.conv1d.Conv1D(f'{name}.2', dim, dim, 5, output)
     return inputs + (0.3*output)
 
 def Generator(n_samples, seq_len, layer_dim, output_dim, prev_outputs=None):

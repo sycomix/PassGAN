@@ -85,16 +85,13 @@ def Conv2D(name, input_dim, output_dim, filter_size, inputs, he_init=True, mask_
         # print "WARNING IGNORING GAIN"
         filter_values *= gain
 
-        filters = lib.param(name+'.Filters', filter_values)
+        filters = lib.param(f'{name}.Filters', filter_values)
 
-        if weightnorm==None:
+        if weightnorm is None:
             weightnorm = _default_weightnorm
         if weightnorm:
             norm_values = np.sqrt(np.sum(np.square(filter_values), axis=(0,1,2)))
-            target_norms = lib.param(
-                name + '.g',
-                norm_values
-            )
+            target_norms = lib.param(f'{name}.g', norm_values)
             with tf.name_scope('weightnorm') as scope:
                 norms = tf.sqrt(tf.reduce_sum(tf.square(filters), reduction_indices=[0,1,2]))
                 filters = filters * (target_norms / norms)
@@ -112,10 +109,7 @@ def Conv2D(name, input_dim, output_dim, filter_size, inputs, he_init=True, mask_
         )
 
         if biases:
-            _biases = lib.param(
-                name+'.Biases',
-                np.zeros(output_dim, dtype='float32')
-            )
+            _biases = lib.param(f'{name}.Biases', np.zeros(output_dim, dtype='float32'))
 
             result = tf.nn.bias_add(result, _biases, data_format='NCHW')
 

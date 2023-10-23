@@ -52,7 +52,7 @@ def Linear(
                 (input_dim, output_dim)
             )
 
-        elif initialization == 'glorot' or (initialization == None):
+        elif initialization == 'glorot' or initialization is None:
 
             weight_values = uniform(
                 np.sqrt(2./(input_dim+output_dim)),
@@ -73,9 +73,12 @@ def Linear(
                 (input_dim, output_dim)
             )
 
-        elif initialization == 'orthogonal' or \
-            (initialization == None and input_dim == output_dim):
-            
+        elif (
+            initialization == 'orthogonal'
+            or initialization is None
+            and input_dim == output_dim
+        ):
+
             # From lasagne
             def sample(shape):
                 if len(shape) < 2:
@@ -90,9 +93,9 @@ def Linear(
                 q = q.reshape(shape)
                 return q.astype('float32')
             weight_values = sample((input_dim, output_dim))
-        
+
         elif initialization[0] == 'uniform':
-        
+
             weight_values = np.random.uniform(
                 low=-initialization[1],
                 high=initialization[1],
@@ -105,21 +108,15 @@ def Linear(
 
         weight_values *= gain
 
-        weight = lib.param(
-            name + '.W',
-            weight_values
-        )
+        weight = lib.param(f'{name}.W', weight_values)
 
-        if weightnorm==None:
+        if weightnorm is None:
             weightnorm = _default_weightnorm
         if weightnorm:
             norm_values = np.sqrt(np.sum(np.square(weight_values), axis=0))
             # norm_values = np.linalg.norm(weight_values, axis=0)
 
-            target_norms = lib.param(
-                name + '.g',
-                norm_values
-            )
+            target_norms = lib.param(f'{name}.g', norm_values)
 
             with tf.name_scope('weightnorm') as scope:
                 norms = tf.sqrt(tf.reduce_sum(tf.square(weight), reduction_indices=[0]))
@@ -140,9 +137,8 @@ def Linear(
             result = tf.nn.bias_add(
                 result,
                 lib.param(
-                    name + '.b',
-                    np.zeros((output_dim,), dtype='float32')
-                )
+                    f'{name}.b', np.zeros((output_dim,), dtype='float32')
+                ),
             )
 
         return result

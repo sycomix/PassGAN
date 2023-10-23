@@ -6,16 +6,15 @@ import gzip
 import cPickle as pickle
 
 def unpickle(file):
-    fo = open(file, 'rb')
-    dict = pickle.load(fo)
-    fo.close()
+    with open(file, 'rb') as fo:
+        dict = pickle.load(fo)
     return dict['data'], dict['labels']
 
 def cifar_generator(filenames, batch_size, data_dir):
     all_data = []
     all_labels = []
-    for filename in filenames:        
-        data, labels = unpickle(data_dir + '/' + filename)
+    for filename in filenames:    
+        data, labels = unpickle(f'{data_dir}/{filename}')
         all_data.append(data)
         all_labels.append(labels)
 

@@ -21,9 +21,13 @@ with open('../data/rockyou-full.txt', 'r') as f:
     split = int(len(lines) * 0.80)
 
     with open('../data/train.txt', 'w') as f:
-        print('[info] saving 80% ({}) of dataset for training in ../data/train.txt'.format(split))
-        f.write(''.join(lines[0:split]))
+        print(
+            f'[info] saving 80% ({split}) of dataset for training in ../data/train.txt'
+        )
+        f.write(''.join(lines[:split]))
 
     with open('../data/test.txt', 'w') as f:
-        print('[info] saving 20% ({}) of dataset for testing in ../data/test.txt'.format(len(lines) - split))
+        print(
+            f'[info] saving 20% ({len(lines) - split}) of dataset for testing in ../data/test.txt'
+        )
         f.write(''.join(lines[split:]))

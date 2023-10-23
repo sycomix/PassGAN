@@ -8,9 +8,7 @@ def tokenize_string(sample):
 class NgramLanguageModel(object):
     def __init__(self, n, samples, tokenize=False):
         if tokenize:
-            tokenized_samples = []
-            for sample in samples:
-                tokenized_samples.append(tokenize_string(sample))
+            tokenized_samples = [tokenize_string(sample) for sample in samples]
             samples = tokenized_samples
 
         self._n = n
@@ -37,10 +35,10 @@ class NgramLanguageModel(object):
             return np.log(self._ngram_counts[ngram]) - np.log(self._total_ngrams)
 
     def kl_to(self, p):
-        # p is another NgramLanguageModel
-        log_likelihood_ratios = []
-        for ngram in p.ngrams():
-            log_likelihood_ratios.append(p.log_likelihood(ngram) - self.log_likelihood(ngram))
+        log_likelihood_ratios = [
+            p.log_likelihood(ngram) - self.log_likelihood(ngram)
+            for ngram in p.ngrams()
+        ]
         return np.mean(log_likelihood_ratios)
 
     def cosine_sim_with(self, p):
